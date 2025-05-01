@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
