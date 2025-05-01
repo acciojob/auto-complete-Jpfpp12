@@ -1,47 +1,65 @@
-import React, { useState } from "react";
-import "./styles.css";
+import React, { useState, useEffect, useCallback } from "react";
 
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
-function App() {
+function debounce(fn, delay) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+const App = () => {
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setInput(value);
-    const filtered = fruits.filter((fruit) =>
-      fruit.toLowerCase().startsWith(value.toLowerCase())
-    );
-    setSuggestions(value ? filtered : []);
-  };
+  const fetchSuggestions = useCallback(
+    debounce(async (query) => {
+      if (!query) return setSuggestions([]);
 
-  const handleSuggestionClick = (value) => {
+      // Simulate async fetch (replace with real API call if needed)
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const filtered = fruits.filter((fruit) =>
+        fruit.toLowerCase().startsWith(query.toLowerCase())
+      );
+      setSuggestions(filtered);
+    }, 300),
+    []
+  );
+
+  useEffect(() => {
+    fetchSuggestions(input);
+  }, [input, fetchSuggestions]);
+
+  const handleChange = (e) => setInput(e.target.value);
+
+  const handleClick = (value) => {
     setInput(value);
     setSuggestions([]);
   };
 
   return (
-   <div className="container">
+    <div className="autocomplete-container">
         {/* Do not remove the main div */}
-      <h1>Fruit Autocomplete</h1>
       <input
         type="text"
         value={input}
         onChange={handleChange}
-        placeholder="Type a fruit..."
+        placeholder="Search fruits..."
       />
       {suggestions.length > 0 && (
-        <ul className="suggestions">
-          {suggestions.map((fruit, index) => (
-            <li key={index} onClick={() => handleSuggestionClick(fruit)}>
-              {fruit}
+        <ul className="suggestions-list">
+          {suggestions.map((s, i) => (
+            <li key={i} onClick={() => handleClick(s)}>
+              {s}
             </li>
           ))}
         </ul>
       )}
     </div>
   );
-}
+};
 
 export default App;
