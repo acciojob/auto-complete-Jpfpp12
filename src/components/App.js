@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./styles.css";
 
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
