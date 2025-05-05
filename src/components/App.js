@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import 'regenerator-runtime/runtime';
 
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
@@ -14,6 +14,7 @@ function debounce(fn, delay) {
 const App = () => {
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const activeQuery = useRef(null); // Track latest input request
 
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
@@ -22,20 +23,23 @@ const App = () => {
         return;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      activeQuery.current = query; // Store latest active query
 
-      const filtered = fruits.filter((fruit) =>
-        fruit.toLowerCase().startsWith(query.toLowerCase())
-      );
-      
-      setSuggestions(filtered);
-    }, 300),
-    []
+      await new Promise((resolve) => setTimeout(resolve, 250)); // Reduce debounce delay
+
+      // Prevent old responses from setting state if user types quickly
+      if (activeQuery.current === query) {
+        const filtered = fruits.filter((fruit) =>
+          fruit.toLowerCase().startsWith(query.toLowerCase())
+        );
+        setSuggestions(filtered);
+      }
+    }, 250), []
   );
 
   useEffect(() => {
     fetchSuggestions(input);
-  }, [input, fetchSuggestions]);
+  }, [input]);
 
   const handleChange = (e) => setInput(e.target.value);
 
