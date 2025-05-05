@@ -19,13 +19,13 @@ const App = () => {
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
       if (!query.trim()) { 
-        setSuggestions([]);
+        setSuggestions([]); // Ensure suggestions are fully removed
         return;
       }
 
       activeQuery.current = query;
 
-      await new Promise((resolve) => setTimeout(resolve, 200)); 
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       if (activeQuery.current === query) {
         const filtered = fruits.filter((fruit) =>
@@ -56,20 +56,15 @@ const App = () => {
         onChange={handleChange}
         placeholder="Search fruits..."
       />
-      <ul 
-        className="suggestions-list"
-        style={{ visibility: 'visible' }}
-      >
-        {suggestions.length > 0 ? (
-          suggestions.map((s, i) => (
+      {suggestions.length > 0 && (
+        <ul className="suggestions-list">
+          {suggestions.map((s, i) => (
             <li key={i} onClick={() => handleClick(s)}>
               {s}
             </li>
-          ))
-        ) : (
-          <li style={{ visibility: 'hidden' }}>No suggestions</li> 
-        )}
-      </ul>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
