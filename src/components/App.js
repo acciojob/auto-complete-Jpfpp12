@@ -18,14 +18,14 @@ const App = () => {
 
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
-      if (!query) {
-        setSuggestions([]); // Ensure `<ul>` stays in DOM
+      if (!query.trim()) { 
+        setSuggestions([]);
         return;
       }
 
       activeQuery.current = query;
 
-      await new Promise((resolve) => setTimeout(resolve, 200)); // Reduced debounce delay
+      await new Promise((resolve) => setTimeout(resolve, 200)); 
 
       if (activeQuery.current === query) {
         const filtered = fruits.filter((fruit) =>
@@ -56,11 +56,18 @@ const App = () => {
         onChange={handleChange}
         placeholder="Search fruits..."
       />
-      <ul className="suggestions-list">
+      <ul 
+        className="suggestions-list"
+        style={{ visibility: 'visible' }}
+      >
         {suggestions.length > 0 ? (
-          suggestions.map((s, i) => <li key={i} onClick={() => handleClick(s)}>{s}</li>)
+          suggestions.map((s, i) => (
+            <li key={i} onClick={() => handleClick(s)}>
+              {s}
+            </li>
+          ))
         ) : (
-          <li style={{ visibility: 'hidden' }}>Placeholder</li> // Keeps `<ul>` in DOM
+          <li style={{ visibility: 'hidden' }}>No suggestions</li> 
         )}
       </ul>
     </div>
