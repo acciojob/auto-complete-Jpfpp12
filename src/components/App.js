@@ -14,27 +14,26 @@ function debounce(fn, delay) {
 const App = () => {
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const activeQuery = useRef(null); // Track latest input request
+  const activeQuery = useRef(null);
 
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
       if (!query) {
-        setSuggestions([]); // Ensure suggestions clear on empty input
+        setSuggestions([]); // Ensure `<ul>` stays in DOM
         return;
       }
 
-      activeQuery.current = query; // Track the latest input request
+      activeQuery.current = query;
 
-      await new Promise((resolve) => setTimeout(resolve, 250)); // Reduced debounce delay
+      await new Promise((resolve) => setTimeout(resolve, 200)); // Reduced debounce delay
 
-      // Ensure only the latest query updates state
       if (activeQuery.current === query) {
         const filtered = fruits.filter((fruit) =>
           fruit.toLowerCase().startsWith(query.toLowerCase())
         );
         setSuggestions(filtered);
       }
-    }, 250),
+    }, 200),
     []
   );
 
@@ -57,15 +56,12 @@ const App = () => {
         onChange={handleChange}
         placeholder="Search fruits..."
       />
-      <ul
-        className="suggestions-list"
-        style={{ display: suggestions.length > 0 ? 'block' : 'none' }}
-      >
-        {suggestions.map((s, i) => (
-          <li key={i} onClick={() => handleClick(s)}>
-            {s}
-          </li>
-        ))}
+      <ul className="suggestions-list">
+        {suggestions.length > 0 ? (
+          suggestions.map((s, i) => <li key={i} onClick={() => handleClick(s)}>{s}</li>)
+        ) : (
+          <li style={{ visibility: 'hidden' }}>Placeholder</li> // Keeps `<ul>` in DOM
+        )}
       </ul>
     </div>
   );
