@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import 'regenerator-runtime/runtime';
+
 
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
