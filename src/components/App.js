@@ -17,14 +17,17 @@ const App = () => {
 
   const fetchSuggestions = useCallback(
     debounce(async (query) => {
-      if (!query) return setSuggestions([]);
+      if (!query) {
+        setSuggestions([]);
+        return;
+      }
 
-      // Simulate async fetch (replace with real API call if needed)
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       const filtered = fruits.filter((fruit) =>
         fruit.toLowerCase().startsWith(query.toLowerCase())
       );
+      
       setSuggestions(filtered);
     }, 300),
     []
