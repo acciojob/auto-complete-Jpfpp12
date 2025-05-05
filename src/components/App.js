@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import 'regenerator-runtime/runtime';
 
-
 const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
 function debounce(fn, delay) {
@@ -44,7 +43,6 @@ const App = () => {
 
   return (
     <div className="autocomplete-container">
-        {/* Do not remove the main div */}
       <input
         type="text"
         value={input}
