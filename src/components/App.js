@@ -57,15 +57,16 @@ const App = () => {
         onChange={handleChange}
         placeholder="Search fruits..."
       />
-      {suggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {suggestions.map((s, i) => (
-            <li key={i} onClick={() => handleClick(s)}>
-              {s}
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul
+        className="suggestions-list"
+        style={{ display: suggestions.length > 0 ? 'block' : 'none' }}
+      >
+        {suggestions.map((s, i) => (
+          <li key={i} onClick={() => handleClick(s)}>
+            {s}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
